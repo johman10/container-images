@@ -47,9 +47,6 @@ RUN \
 # hadolint ignore=DL3007
 FROM ghcr.io/k8s-at-home/ubuntu:latest
 
-ARG TARGETPLATFORM
-ARG VERSION
-
 # Proper way to set config directory
 ENV HOME=/config \
     XDG_CONFIG_HOME=/config \
@@ -61,6 +58,11 @@ USER root
 
 COPY --from=builder /usr/local/bin/transmission-daemon /app/transmission-daemon
 COPY --from=builder /usr/local/share/transmission/web /web
+
+# Install custom UI's
+RUN \
+  curl -o /tmp/flood-for-transmission.tar.gz -L "https://github.com/johman10/flood-for-transmission/releases/download/latest/flood-for-transmission.tar.gz" \
+  && tar xf /tmp/flood-for-transmission.tar.gz -C /
 
 # hadolint ignore=DL3008,DL3015
 RUN \
